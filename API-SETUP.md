@@ -1,61 +1,98 @@
 # Edge-IQ API setup
 
-## Architecture
+## What you need to do with your free Odds API key
 
-`index.html` is a static GitHub Pages app. It never contains the Odds API key.
+**Do not send the key to me and do not paste it into GitHub.**
 
-`worker.js` is the server-side proxy. It reads the `ODDS_API_KEY` secret from Cloudflare and forwards a single snapshot request to Odds API.
+The key belongs in Cloudflare as a Worker **Secret** named exactly:
 
-The browser only calls the Worker when **LOAD LIVE ODDS** is pressed. Filters, sorting and cached-data rendering do not call the API.
+`ODDS_API_KEY`
 
-## Cloudflare Worker
+Cloudflare keeps Worker secrets encrypted and makes them available to the Worker through `env.ODDS_API_KEY`. citehttps://developers.cloudflare.com/workers/configuration/secrets/
 
-1. Deploy `worker.js` using the Worker name in `wrangler.toml` (`edge-iq-odds`).
-2. Add the API key as a Cloudflare Worker secret named `ODDS_API_KEY`.
-3. Do **not** put the key in `index.html`, `wrangler.toml`, GitHub Secrets exposed to the browser, or any committed file.
-4. Copy the deployed Worker URL into **API connection settings** in Edge-IQ.
+## Recommended setup from your iPhone
 
-With Wrangler, the secret can be added with:
+1. Open the Cloudflare dashboard.
+2. Go to **Workers & Pages**.
+3. Open the Worker **edge-iq-odds**.
+4. Open **Settings**.
+5. Find **Variables and Secrets**.
+6. Select **Add**.
+7. Choose **Secret**.
+8. Variable name: `ODDS_API_KEY`
+9. Paste your free Odds API key into **Value**.
+10. Save/deploy the Worker.
+
+Cloudflare's current dashboard flow is Workers & Pages → Worker → Settings → Variables and Secrets → Add → Secret → Deploy. citeturn1search0
+
+### Alternative: Wrangler
+
+If you later use a terminal, this also works:
 
 ```bash
 npx wrangler secret put ODDS_API_KEY
 ```
 
-The value entered at the prompt is stored by Cloudflare and is not committed to the repository.
+Cloudflare will prompt for the value and store it as a Worker secret. citeturn1search0
 
-## Manual request policy
+## Edge-IQ architecture
 
-Edge-IQ intentionally has no polling loop, page-load request, filter-triggered request, timer, SSE connection or WebSocket connection.
+`index.html` is a static GitHub Pages app. It never contains the Odds API key.
 
-One click on **LOAD LIVE ODDS** produces one browser request to the Worker. The Worker makes one upstream Odds API snapshot request for that load.
+`worker.js` is the server-side proxy. It reads `env.ODDS_API_KEY` and forwards the request to Odds API using the `X-API-Key` header.
 
-The returned snapshot is cached in `localStorage` for the current browser. Changing the minimum-odds filter only re-renders that cached snapshot.
+The browser only calls the Worker when **LOAD LIVE ODDS** is pressed. There is deliberately:
 
-## API parameters
+- no polling
+- no page-load API request
+- no filter-triggered API request
+- no timer
+- no SSE connection
+- no WebSocket connection
 
-The Worker accepts:
+One button press = one browser request to the Worker = one upstream Odds API snapshot request.
 
-- `league`: `AFL`, `NBA`, or `NBL`
-- `limit`: maximum number of events, capped at 100
-- `bookmakers`: optional comma-separated bookmaker keys
+## Edge-IQ setup
 
-Example Worker request:
+After the Worker is deployed:
 
-`/odds?league=AFL&limit=25&bookmakers=sportsbet,tab`
+1. Copy the Worker URL, for example `https://edge-iq-odds.<your-subdomain>.workers.dev`.
+2. Open Edge-IQ.
+3. Expand **API connection settings**.
+4. Paste the Worker URL.
+5. Tap **Save**.
+6. Select AFL, NBA or NBL.
+7. Tap **LOAD LIVE ODDS**.
 
-The Worker sends the API key upstream using the `X-API-Key` header.
+The first request should then return the live snapshot.
 
-## Next EV layer
+## EV + Kelly
 
-The normalized market board already exposes:
+The market board now lets you enter a **Model %** for any selection. Edge-IQ calculates locally:
 
-- event
-- start time
-- market
-- selection
-- line
-- bookmaker
-- decimal odds
 - implied probability
+- fair odds
+- EV %
+- Kelly %
+- suggested stake from the selected bankroll
 
-The next layer will add model probability, fair odds, edge, EV%, Kelly fraction and bookmaker-best-price ranking without creating any additional odds API requests.
+These calculations use the cached odds snapshot and create **zero additional API requests**.
+
+The default staking setting is **Half Kelly** with a $5,000 example bankroll; both are editable and saved locally in your browser.
+
+## Bookmakers
+
+Use canonical bookmaker keys such as `sportsbet`, `tab`, `ladbrokes`, `bet365ww`, `neds` or `unibet` where available. The current Odds API bookmaker catalog is the authority for the keys available to your API client. citeturn0search5
+
+## Security
+
+Never put the Odds API key in:
+
+- `index.html`
+- `worker.js`
+- `wrangler.toml`
+- GitHub commits
+- the Edge-IQ API connection field
+- screenshots or public posts
+
+If a key is ever accidentally committed or exposed, revoke/rotate it with the API provider immediately.
