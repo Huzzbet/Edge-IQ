@@ -3,6 +3,7 @@
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
   const key=v=>String(v??'').trim().toLowerCase();
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
   function flatten(data){
     const rows=[];
     for(const e of (data?.events||[])){
@@ -27,8 +28,9 @@
     }
     return rows;
   }
-  function scan(data){
-    const rows=flatten(data), bookGroups=new Map();
+
+  function addBookMetrics(rows){
+    const bookGroups=new Map();
     for(const r of rows){
       const k=[r.eventId||r.event,r.market,r.period,r.line??''].map(key).join('|');
       const bk=k+'|'+r.book;
@@ -39,12 +41,22 @@
       const inv=g.reduce((s,r)=>s+1/r.odds,0);
       g.forEach(r=>{r.rawProb=1/r.odds;r.noVigProb=inv>0?r.rawProb/inv:null;r.bookMargin=inv-1;});
     }
+  }
+
+  function median(values){
+    const a=values.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length)return null;
+    const m=Math.floor(a.length/2); return a.length%2?a[m]:(a[m-1]+a[m])/2;
+  }
+
+  function scan(data){
+    const rows=flatten(data); addBookMetrics(rows);
     const marketGroups=new Map();
     for(const r of rows){
       const k=[r.eventId||r.event,r.market,r.period,r.line??''].map(key).join('|');
       if(!marketGroups.has(k)) marketGroups.set(k,[]);
       marketGroups.get(k).push(r);
     }
+
     const opportunities=[];
     for(const g of marketGroups.values()){
       const selections=new Map();
@@ -53,19 +65,34 @@
         selections.get(key(r.selection)).push(r);
       }
       for(const prices of selections.values()){
-        const consensus=prices.map(r=>r.noVigProb).filter(v=>v!=null);
-        if(!consensus.length) continue;
-        const consensusProb=consensus.reduce((a,b)=>a+b,0)/consensus.length;
+        const valid=prices.filter(r=>r.noVigProb!=null);
+        if(!valid.length) continue;
+        const probs=valid.map(r=>r.noVigProb);
+        const consensusProb=median(probs);
+        const meanProb=probs.reduce((a,b)=>a+b,0)/probs.length;
+        const dispersion=Math.sqrt(probs.reduce((s,p)=>s+Math.pow(p-meanProb,2),0)/probs.length);
         const best=prices.reduce((a,b)=>b.odds>a.odds?b:a);
         const ev=consensusProb*best.odds-1;
         const fair=1/consensusProb;
-        const dispersion=consensus.length>1?Math.sqrt(consensus.reduce((s,p)=>s+Math.pow(p-consensusProb,2),0)/consensus.length):0;
-        const confidence=Math.max(0,Math.min(100,50+Math.min(25,consensus.length*7.5)-Math.min(25,dispersion*400)));
-        opportunities.push({...best,books:prices.length,consensusProb,ev,fair,dispersion,confidence,prices});
+        const bestVsMedian=(best.odds/fair)-1;
+        const books=prices.length;
+        const coverage=Math.min(1,books/5);
+        const agreement=Math.max(0,1-dispersion*500);
+        const edgeQuality=Math.max(0,Math.min(1,0.55*coverage+0.45*agreement));
+        const confidence=Math.round(100*edgeQuality);
+        const signal=ev>=0.10?'ELITE':ev>=0.05?'STRONG':ev>=0.03?'WATCH':ev>0?'MARGINAL':'PASS';
+        opportunities.push({...best,books,consensusProb,meanProb,ev,fair,dispersion,confidence,edgeQuality,bestVsMedian,signal,prices});
       }
     }
-    opportunities.sort((a,b)=>b.ev-a.ev);
-    return {rows,opportunities,positive:opportunities.filter(x=>x.ev>0)};
+
+    opportunities.sort((a,b)=>{
+      if(b.ev!==a.ev)return b.ev-a.ev;
+      if(b.confidence!==a.confidence)return b.confidence-a.confidence;
+      return b.books-a.books;
+    });
+    const positive=opportunities.filter(x=>x.ev>0);
+    return {rows,opportunities,positive};
   }
-  window.EdgeIQScanner={scan,flatten,esc};
+
+  window.EdgeIQScanner={scan,flatten,esc,median};
 })();
