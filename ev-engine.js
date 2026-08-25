@@ -1,35 +1,32 @@
-/* Edge-IQ EV engine
- * Runs entirely in the browser against the cached odds snapshot.
- * No API request is made by this file.
- */
+/* Edge-IQ EV + Kelly engine. Uses cached odds only; never calls the Odds API. */
 (function(){
   const BANKROLL_KEY='edgeIqBankroll';
   const FRACTION_KEY='edgeIqKellyFraction';
-  const bankEl=()=>document.getElementById('bankroll');
-  const fracEl=()=>document.getElementById('kellyFraction');
-  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
-  const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
-  function ev(prob,odds){
+  const $=id=>document.getElementById(id);
+  const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null};
+  function calculate(prob,odds,fraction){
     if(prob==null||odds==null||prob<=0||prob>=1||odds<=1)return null;
-    return prob*odds-1;
+    const b=odds-1; const ev=prob*odds-1; const full=Math.max(0,ev/b);
+    return {ev,fullKelly:full,kelly:full*fraction};
   }
-  function kelly(prob,odds,fraction){
-    if(prob==null||odds==null||prob<=0||prob>=1||odds<=1)return null;
-    const b=odds-1; const raw=(prob*odds-1)/b;
-    return Math.max(0,raw*(fraction||1));
+  function renderRow(input){
+    const tr=input.closest('tr'); if(!tr)return;
+    const odds=n(input.dataset.odds), prob=n(input.value)/100;
+    const fraction=n($('kellyFraction')?.value)||0.5;
+    const bankroll=n($('bankroll')?.value)||0;
+    const r=calculate(prob,odds,fraction);
+    const ev=tr.querySelector('.evCell'), k=tr.querySelector('.kellyCell'), s=tr.querySelector('.stakeCell'), fair=tr.querySelector('.fairCell');
+    if(!r){ev.textContent='—';k.textContent='—';s.textContent='—';fair.textContent='—';ev.className='evCell';return;}
+    ev.textContent=(r.ev*100).toFixed(1)+'%'; ev.className='evCell '+(r.ev>0?'positive':'negative');
+    k.textContent=(r.kelly*100).toFixed(1)+'%';
+    s.textContent=bankroll>0?'$'+Math.round(bankroll*r.kelly).toLocaleString():'—';
+    fair.textContent=(1/prob).toFixed(2);
   }
-  function addControls(){
-    const setup=document.querySelector('.setup'); if(!setup||document.getElementById('evControls'))return;
-    const box=document.createElement('div');box.id='evControls';box.className='setup';
-    box.innerHTML='<summary style="list-style:none;cursor:default;font-weight:800">EV & Kelly settings</summary><div class="setupGrid" style="grid-template-columns:1fr 1fr; margin-top:12px"><div><label style="display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Bankroll ($)</label><input id="bankroll" type="number" min="0" step="1" value="5000"></div><div><label style="display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Kelly fraction</label><select id="kellyFraction" style="background:#0d1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;width:100%"><option value="1">Full Kelly</option><option value="0.5" selected>Half Kelly</option><option value="0.25">Quarter Kelly</option></select></div></div><div class="note">Enter a model probability on a row to calculate EV and Kelly. These calculations use cached odds only.</div>';
-    setup.insertAdjacentElement('afterend',box);
-    const b=localStorage.getItem(BANKROLL_KEY);if(b)bankEl().value=b;
-    const f=localStorage.getItem(FRACTION_KEY);if(f)fracEl().value=f;
-    bankEl().addEventListener('input',()=>localStorage.setItem(BANKROLL_KEY,bankEl().value));
-    fracEl().addEventListener('change',()=>localStorage.setItem(FRACTION_KEY,fracEl().value));
+  function bind(){
+    document.querySelectorAll('.modelProb').forEach(x=>x.addEventListener('input',()=>renderRow(x)));
+    $('bankroll')?.addEventListener('input',()=>document.querySelectorAll('.modelProb').forEach(renderRow));
+    $('kellyFraction')?.addEventListener('change',()=>document.querySelectorAll('.modelProb').forEach(renderRow));
   }
-  window.edgeIQRenderEV=function(){
-    if(!window.edgeIQRows||typeof window.edgeIQRenderOriginal!=='function')return;
-  };
-  addControls();
+  window.EdgeIQ={calculate,renderRow,bind};
+  window.addEventListener('DOMContentLoaded',bind);
 })();
