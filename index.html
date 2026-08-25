@@ -1,103 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1020">
 <title>Edge-IQ — EV Finder</title>
 <style>
-:root{--bg:#080c18;--panel:#11182a;--panel2:#18233b;--text:#eef3ff;--muted:#8f9bb5;--line:#273451;--accent:#67e8a5;--warn:#ffd166;--danger:#ff6b7a}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#070a14,#0b1020 40%,#0b1020);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{max-width:1500px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}.brand h1{margin:0;font-size:32px;letter-spacing:-.7px}.brand p{margin:5px 0 0;color:var(--muted)}.badge{display:inline-flex;align-items:center;gap:7px;background:#132b22;border:1px solid #255c45;color:var(--accent);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800}
-.controls{display:grid;grid-template-columns:1fr 1fr 1.6fr 1fr auto;gap:10px;align-items:end;background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:16px}.control{display:flex;flex-direction:column;gap:6px}.control label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.control select,.control input{background:#0d1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-width:0;width:100%}button{border:0;border-radius:11px;padding:12px 18px;font-weight:850;cursor:pointer;background:var(--accent);color:#07140d}button:disabled{opacity:.5;cursor:not-allowed}.load{min-width:190px}.ghost{background:#202c47;color:var(--text);border:1px solid var(--line)}
-.status{margin:14px 0;display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}.status strong{color:var(--text)}.ok{color:var(--accent)!important}.error{color:var(--danger)!important}.warn{color:var(--warn)!important}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.card .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.card .v{font-size:25px;font-weight:850;margin-top:4px}.tableWrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.tableHead{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.tableHead h2{margin:0;font-size:18px}.hint{color:var(--muted);font-size:12px;margin-top:3px}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#202c47;color:#cbd6ed;font-size:12px}.tableScroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:1250px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;background:#10172a;position:sticky;top:0;z-index:2}tr:hover td{background:#151e33}.price{font-weight:850}.best{color:var(--accent)}.empty{padding:50px;text-align:center;color:var(--muted)}footer{color:var(--muted);font-size:12px;margin-top:16px}.warning{color:var(--warn)}.setup{margin:16px 0;background:#10172a;border:1px solid var(--line);border-radius:14px;padding:14px}.setup summary{cursor:pointer;font-weight:800}.setupGrid{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px}.setup input{background:#0d1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;width:100%}.note{color:var(--muted);font-size:12px;margin-top:8px}.positive{color:var(--accent);font-weight:850}.negative{color:var(--danger);font-weight:850}
-@media(max-width:1050px){.controls{grid-template-columns:1fr 1fr 1fr}.load{grid-column:1/-1}.cards{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.wrap{padding:14px}.top{align-items:flex-start}.top .badge{display:none}.controls{grid-template-columns:1fr 1fr}.cards{grid-template-columns:repeat(2,1fr)}.setupGrid{grid-template-columns:1fr}.load{width:100%;grid-column:1/-1}}
+:root{--bg:#080c18;--panel:#11182a;--text:#eef3ff;--muted:#8f9bb5;--line:#273451;--accent:#67e8a5;--warn:#ffd166;--danger:#ff6b7a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#070a14,#0b1020 40%,#0b1020);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{max-width:1550px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}.brand h1{margin:0;font-size:32px;letter-spacing:-.7px}.brand p{margin:5px 0;color:var(--muted)}.badge{background:#132b22;border:1px solid #255c45;color:var(--accent);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800}.controls{display:grid;grid-template-columns:1fr 1fr 1.6fr 1fr auto;gap:10px;align-items:end;background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:16px}.control{display:flex;flex-direction:column;gap:6px}.control label,.setting label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.control select,.control input,.setting input,.setting select,.setup input{background:#0d1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}button{border:0;border-radius:11px;padding:12px 18px;font-weight:850;cursor:pointer;background:var(--accent);color:#07140d}button:disabled{opacity:.5;cursor:not-allowed}.load{min-width:190px}.ghost{background:#202c47;color:var(--text);border:1px solid var(--line)}.status{margin:14px 0;display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}.status strong{color:var(--text)}.ok{color:var(--accent)!important}.error{color:var(--danger)!important}.warn{color:var(--warn)!important}.settings{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.setting{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}.setting label{display:block;margin-bottom:6px}.setup{margin:14px 0;background:#10172a;border:1px solid var(--line);border-radius:14px;padding:14px}.setup summary{cursor:pointer;font-weight:800}.setupGrid{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px}.note{color:var(--muted);font-size:12px;margin-top:8px}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.card .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.card .v{font-size:25px;font-weight:850;margin-top:4px}.tableWrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.tableHead{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.tableHead h2{margin:0;font-size:18px}.hint{color:var(--muted);font-size:12px;margin-top:3px}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#202c47;color:#cbd6ed;font-size:12px}.tableScroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:1450px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;background:#10172a;position:sticky;top:0;z-index:2}tr:hover td{background:#151e33}.price{font-weight:850}.best{color:var(--accent)}.empty{padding:50px;text-align:center;color:var(--muted)}.positive{color:var(--accent);font-weight:850}.negative{color:var(--danger);font-weight:850}.modelProb{width:78px!important;padding:7px!important}.stakeCell,.fairCell,.kellyCell,.evCell{font-weight:800}footer{color:var(--muted);font-size:12px;margin-top:16px}.warning{color:var(--warn)}
+@media(max-width:1050px){.controls{grid-template-columns:1fr 1fr 1fr}.load{grid-column:1/-1}.cards{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.wrap{padding:14px}.top{align-items:flex-start}.badge{display:none}.controls,.settings{grid-template-columns:1fr 1fr}.cards{grid-template-columns:repeat(2,1fr)}.setupGrid{grid-template-columns:1fr}.load{width:100%;grid-column:1/-1}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="top"><div class="brand"><h1>Edge-IQ</h1><p>EV Finder • manual odds ingestion • bookmaker comparison</p></div><div class="badge">● API LOAD IS MANUAL</div></header>
-
+<header class="top"><div class="brand"><h1>Edge-IQ</h1><p>EV Finder • manual odds ingestion • EV + Kelly</p></div><div class="badge">● API LOAD IS MANUAL</div></header>
 <section class="controls">
-<div class="control"><label for="league">League</label><select id="league"><option value="AFL">AFL</option><option value="NBA">NBA</option><option value="NBL">NBL</option></select></div>
-<div class="control"><label for="maxEvents">Max events</label><select id="maxEvents"><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option></select></div>
-<div class="control"><label for="bookmakers">Bookmakers (optional)</label><input id="bookmakers" placeholder="e.g. sportsbet,tab,ladbrokes"></div>
-<div class="control"><label for="minOdds">Minimum odds</label><input id="minOdds" type="number" min="1" step="0.01" value="1.01"></div>
-<button class="load" id="loadBtn" type="button">LOAD LIVE ODDS</button>
+<div class="control"><label>League</label><select id="league"><option>AFL</option><option>NBA</option><option>NBL</option></select></div>
+<div class="control"><label>Max events</label><select id="maxEvents"><option>10</option><option selected>25</option><option>50</option></select></div>
+<div class="control"><label>Bookmakers (optional)</label><input id="bookmakers" placeholder="sportsbet,tab,ladbrokes"></div>
+<div class="control"><label>Minimum odds</label><input id="minOdds" type="number" min="1" step="0.01" value="1.01"></div>
+<button class="load" id="loadBtn">LOAD LIVE ODDS</button>
 </section>
-
-<details class="setup" id="setup"><summary>API connection settings</summary><div class="setupGrid"><input id="proxyUrl" placeholder="https://your-edge-iq-worker.workers.dev"><button class="ghost" id="saveProxy" type="button">Save</button></div><div class="note">Your Odds API key must stay inside the Cloudflare Worker. Edge-IQ never sends the key from the browser.</div></details>
-
+<section class="settings">
+<div class="setting"><label>Bankroll ($)</label><input id="bankroll" type="number" min="0" step="1" value="5000"></div>
+<div class="setting"><label>Kelly staking</label><select id="kellyFraction"><option value="1">Full Kelly</option><option value="0.5" selected>Half Kelly</option><option value="0.25">Quarter Kelly</option></select></div>
+</section>
+<details class="setup" id="setup"><summary>API connection settings</summary><div class="setupGrid"><input id="proxyUrl" placeholder="https://edge-iq-odds.your-subdomain.workers.dev"><button class="ghost" id="saveProxy">Save</button></div><div class="note">The Odds API key is never entered here. It belongs only in the Cloudflare Worker secret named <strong>ODDS_API_KEY</strong>.</div></details>
 <div class="status" id="status"><span>API: <strong>Not loaded</strong></span><span>Last load: <strong>—</strong></span><span>Manual loads this session: <strong>0</strong></span><span>Data: <strong>None</strong></span></div>
-
-<section class="cards">
-<div class="card"><div class="k">Events</div><div class="v" id="eventsCount">0</div></div>
-<div class="card"><div class="k">Odds lines</div><div class="v" id="linesCount">0</div></div>
-<div class="card"><div class="k">Bookmakers</div><div class="v" id="booksCount">0</div></div>
-<div class="card"><div class="k">Selections</div><div class="v" id="selectionsCount">0</div></div>
-<div class="card"><div class="k">Best prices</div><div class="v" id="bestCount">0</div></div>
-</section>
-
-<section class="tableWrap">
-<div class="tableHead"><div><h2>Live Market Board</h2><div class="hint">Filters and sorting use cached data only. They never call the API.</div></div><span class="pill" id="freshness">No data</span></div>
-<div class="tableScroll" id="table"><div class="empty">Press <strong>LOAD LIVE ODDS</strong> to fetch the selected league.</div></div>
-</section>
-<footer><span class="warning">Execution note:</span> odds can move, suspend or disappear. Edge-IQ displays market information and calculated estimates; it does not guarantee profit.</footer>
+<section class="cards"><div class="card"><div class="k">Events</div><div class="v" id="eventsCount">0</div></div><div class="card"><div class="k">Odds lines</div><div class="v" id="linesCount">0</div></div><div class="card"><div class="k">Bookmakers</div><div class="v" id="booksCount">0</div></div><div class="card"><div class="k">Selections</div><div class="v" id="selectionsCount">0</div></div><div class="card"><div class="k">Positive EV</div><div class="v" id="positiveCount">0</div></div></section>
+<section class="tableWrap"><div class="tableHead"><div><h2>Live Market Board</h2><div class="hint">Enter your model probability (%) on a selection. EV and Kelly calculate locally from the cached snapshot.</div></div><span class="pill" id="freshness">No data</span></div><div class="tableScroll" id="table"><div class="empty">Press <strong>LOAD LIVE ODDS</strong> to fetch the selected league.</div></div></section>
+<footer><span class="warning">Execution note:</span> odds can move, suspend or disappear. Edge-IQ provides calculations and market information; it does not guarantee profit.</footer>
 </div>
+<script src="ev-engine.js"></script>
 <script>
-const CACHE_KEY='edge-iq-live-odds-v2';
-const PROXY_KEY='edgeIqApiUrl';
-const REQUEST_KEY='edgeIqRequests';
-let state={data:null,rows:[],sessionRequests:Number(sessionStorage.getItem(REQUEST_KEY)||0)};
-const $=id=>document.getElementById(id);
-
-function proxyUrl(){return localStorage.getItem(PROXY_KEY)||''}
-function setStatus(api,last,dataLabel='None'){const cls=api==='Loaded'?'ok':api==='Error'?'error':api==='Loading…'?'warn':'';$('status').innerHTML=`<span>API: <strong class="${cls}">${esc(api)}</strong></span><span>Last load: <strong>${esc(last||'—')}</strong></span><span>Manual loads this session: <strong>${state.sessionRequests}</strong></span><span>Data: <strong>${esc(dataLabel)}</strong></span>`}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
-function decimalOdds(obj){if(!obj)return null;if(num(obj.odds)>1)return num(obj.odds);if(num(obj.decimal_odds)>1)return num(obj.decimal_odds);if(num(obj.american_odds)){const a=num(obj.american_odds);return a>0?1+a/100:1+100/Math.abs(a)}return null}
-function selectionRows(event,marketName,marketObj,book){
- const out=[];
- const candidates=['home','away','draw','over','under'];
- for(const side of candidates){const obj=book?.[side];if(!obj)continue;const odds=decimalOdds(obj);if(!odds)continue;out.push({eventId:event.event_id,match:`${event.home_team||''} v ${event.away_team||''}`,start:event.start_time,market:marketName,marketType:marketObj?.market_type||'',bookmaker:book.bookmaker||book.name||'Unknown',side,selection:obj.selection_name||obj.name||side,line:obj.line??obj.points??obj.total??marketObj?.line??'',odds})}
- if(!out.length && Array.isArray(book?.selections)){for(const obj of book.selections){const odds=decimalOdds(obj);if(!odds)continue;out.push({eventId:event.event_id,match:`${event.home_team||''} v ${event.away_team||''}`,start:event.start_time,market:marketName,marketType:marketObj?.market_type||'',bookmaker:book.bookmaker||book.name||'Unknown',side:obj.side||'',selection:obj.selection_name||obj.name||obj.selection||'',line:obj.line??obj.points??marketObj?.line??'',odds})}}
- return out;
-}
-function flatten(data){
- const events=Array.isArray(data?.events)?data.events:[];const rows=[];
- for(const e of events){for(const [market,marketObj] of Object.entries(e.lines||{})){for(const b of (Array.isArray(marketObj?.books)?marketObj.books:[])){rows.push(...selectionRows(e,market,marketObj,b))}}}
- return rows;
-}
-function render(data){
- state.data=data;state.rows=flatten(data);
- const rows=state.rows.filter(r=>r.odds>=Math.max(1.01,num($('minOdds').value)||1.01));
- const books=[...new Set(rows.map(r=>r.bookmaker).filter(Boolean))];
- $('eventsCount').textContent=Array.isArray(data?.events)?data.events.length:0;
- $('linesCount').textContent=rows.length;
- $('booksCount').textContent=books.length;
- $('selectionsCount').textContent=new Set(rows.map(r=>`${r.eventId}|${r.market}|${r.selection}|${r.line}`)).size;
- const groups=new Map();for(const r of rows){const k=`${r.eventId}|${r.market}|${r.selection}|${r.line}`;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r)}
- let best=0;const out=[...groups.values()].flatMap(g=>{const max=Math.max(...g.map(x=>x.odds));best++;return g.map(x=>({...x,best:x.odds===max}))}).sort((a,b)=>b.odds-a.odds);
- $('bestCount').textContent=best;
- if(!out.length){$('table').innerHTML='<div class="empty">No normalized odds matched the current filters.</div>';return}
- $('table').innerHTML=`<table><thead><tr><th>Event</th><th>Start</th><th>Market</th><th>Selection</th><th>Line</th><th>Bookmaker</th><th>Odds</th><th>Implied %</th><th>Model %</th><th>EV %</th><th>Kelly</th></tr></thead><tbody>${out.map(r=>`<tr><td>${esc(r.match)}</td><td>${r.start?esc(new Date(Number(r.start)*1000).toLocaleString()):'—'}</td><td>${esc(r.market)}</td><td>${esc(r.selection)}</td><td>${esc(r.line||'—')}</td><td>${esc(r.bookmaker)}</td><td class="price ${r.best?'best':''}">${r.odds.toFixed(2)}${r.best?' ★':''}</td><td>${(100/r.odds).toFixed(1)}%</td><td>—</td><td>—</td><td>—</td></tr>`).join('')}</tbody></table>`;
- const loaded=Number(data?._edgeIqLoadedAt||Date.now());$('freshness').textContent=`Loaded ${new Date(loaded).toLocaleTimeString()}`;
-}
-function loadCache(){try{const raw=localStorage.getItem(CACHE_KEY);if(!raw)return;const x=JSON.parse(raw);if(x?.data){render(x.data);setStatus('Cached',new Date(x.loadedAt).toLocaleString(),`${x.data.events?.length||0} events`);}}catch(e){console.warn(e)}}
-async function loadOdds(){
- const base=proxyUrl();if(!base){$('setup').open=true;alert('Add your Cloudflare Worker URL under API connection settings first.');return}
- const btn=$('loadBtn');if(btn.disabled)return;btn.disabled=true;btn.textContent='LOADING ODDS…';setStatus('Loading…','', 'Request in progress');
- try{
-   const u=new URL(base);u.searchParams.set('league',$('league').value);u.searchParams.set('limit',$('maxEvents').value);const books=$('bookmakers').value.trim();if(books)u.searchParams.set('bookmakers',books);
-   const res=await fetch(u.toString(),{method:'GET',headers:{Accept:'application/json'},cache:'no-store'});let payload;try{payload=await res.json()}catch{payload={error:'Invalid JSON response'}}
-   if(!res.ok)throw new Error(payload?.detail||payload?.error||`API ${res.status}`);
-   payload._edgeIqLoadedAt=Date.now();state.sessionRequests++;sessionStorage.setItem(REQUEST_KEY,String(state.sessionRequests));localStorage.setItem(CACHE_KEY,JSON.stringify({loadedAt:Date.now(),data:payload}));render(payload);setStatus('Loaded',new Date().toLocaleString(),`${payload.events?.length||0} events`);
- }catch(err){setStatus('Error',err?.message||String(err));alert(`Odds load failed:\n\n${err?.message||String(err)}`)}finally{btn.disabled=false;btn.textContent='LOAD LIVE ODDS'}
-}
-$('loadBtn').addEventListener('click',loadOdds);
-$('saveProxy').addEventListener('click',()=>{const value=$('proxyUrl').value.trim().replace(/\/$/,'');if(!value){localStorage.removeItem(PROXY_KEY)}else{localStorage.setItem(PROXY_KEY,value)}alert(value?'API proxy saved.':'API proxy cleared.')});
-$('minOdds').addEventListener('input',()=>{if(state.data)render(state.data)});
-$('proxyUrl').value=proxyUrl();
-loadCache();
+const CACHE_KEY='edge-iq-live-odds-v3',PROXY_KEY='edgeIqApiUrl',REQUEST_KEY='edgeIqRequests';
+let state={data:null,rows:[],sessionRequests:Number(sessionStorage.getItem(REQUEST_KEY)||0)};const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
+function oddsOf(o){if(!o)return null;if(num(o.odds)>1)return num(o.odds);if(num(o.decimal_odds)>1)return num(o.decimal_odds);if(num(o.american_odds)){const a=num(o.american_odds);return a>0?1+a/100:1+100/Math.abs(a)}return null}
+function rowsFor(e,market,m,b){const out=[];for(const side of ['home','away','draw','over','under']){const o=b?.[side],od=oddsOf(o);if(!o||!od)continue;out.push({eventId:e.event_id,match:`${e.home_team||''} v ${e.away_team||''}`,start:e.start_time,market,marketType:m?.market_type||'',bookmaker:b.bookmaker||b.name||'Unknown',selection:o.selection_name||o.name||side,line:o.line??o.points??o.total??m?.line??'',odds:od})}return out}
+function flatten(data){const rows=[];for(const e of Array.isArray(data?.events)?data.events:[]){for(const [market,m] of Object.entries(e.lines||{})){for(const b of Array.isArray(m?.books)?m.books:[])rows.push(...rowsFor(e,market,m,b))}}return rows}
+function render(data){state.data=data;state.rows=flatten(data);const min=Math.max(1.01,num($('minOdds').value)||1.01);let rows=state.rows.filter(r=>r.odds>=min);const groups=new Map();rows.forEach(r=>{const k=`${r.eventId}|${r.market}|${r.selection}|${r.line}`;(groups.get(k)||groups.set(k,[]).get(k)).push(r)});const out=[];for(const g of groups.values()){const best=Math.max(...g.map(x=>x.odds));g.forEach(x=>out.push({...x,best:x.odds===best}))}out.sort((a,b)=>b.odds-a.odds);$('eventsCount').textContent=data?.events?.length||0;$('linesCount').textContent=rows.length;$('booksCount').textContent=new Set(rows.map(x=>x.bookmaker)).size;$('selectionsCount').textContent=groups.size;$('positiveCount').textContent=0;if(!out.length){$('table').innerHTML='<div class="empty">No normalized odds matched the current filters.</div>';return}
+$('table').innerHTML=`<table><thead><tr><th>Event</th><th>Start</th><th>Market</th><th>Selection</th><th>Line</th><th>Bookmaker</th><th>Odds</th><th>Implied</th><th>Model %</th><th>Fair Odds</th><th>EV %</th><th>Kelly %</th><th>Stake</th></tr></thead><tbody>${out.map(r=>`<tr><td>${esc(r.match)}</td><td>${r.start?esc(new Date(Number(r.start)*1000).toLocaleString()):'—'}</td><td>${esc(r.market)}</td><td>${esc(r.selection)}</td><td>${esc(r.line||'—')}</td><td>${esc(r.bookmaker)}</td><td class="price ${r.best?'best':''}">${r.odds.toFixed(2)}${r.best?' ★':''}</td><td>${(100/r.odds).toFixed(1)}%</td><td><input class="modelProb" type="number" min="0.01" max="99.99" step="0.1" placeholder="%" data-odds="${r.odds}"></td><td class="fairCell">—</td><td class="evCell">—</td><td class="kellyCell">—</td><td class="stakeCell">—</td></tr>`).join('')}</tbody></table>`;$('freshness').textContent=`Loaded ${new Date(data._edgeIqLoadedAt||Date.now()).toLocaleTimeString()}`;window.EdgeIQ?.bind();}
+function setStatus(api,last,data='None'){const c=api==='Loaded'?'ok':api==='Error'?'error':api==='Loading…'?'warn':'';$('status').innerHTML=`<span>API: <strong class="${c}">${esc(api)}</strong></span><span>Last load: <strong>${esc(last||'—')}</strong></span><span>Manual loads this session: <strong>${state.sessionRequests}</strong></span><span>Data: <strong>${esc(data)}</strong></span>`}
+function cache(){try{const x=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(x?.data){render(x.data);setStatus('Cached',new Date(x.loadedAt).toLocaleString(),`${x.data.events?.length||0} events`)}}catch(e){}}
+async function loadOdds(){const base=localStorage.getItem(PROXY_KEY)||'';if(!base){$('setup').open=true;alert('First add your Cloudflare Worker URL under API connection settings.');return}const b=$('loadBtn');if(b.disabled)return;b.disabled=true;b.textContent='LOADING ODDS…';setStatus('Loading…','','Request in progress');try{const u=new URL(base);u.searchParams.set('league',$('league').value);u.searchParams.set('limit',$('maxEvents').value);const books=$('bookmakers').value.trim();if(books)u.searchParams.set('bookmakers',books);const res=await fetch(u,{headers:{Accept:'application/json'},cache:'no-store'});let p;try{p=await res.json()}catch{throw new Error('Worker returned non-JSON data')}if(!res.ok)throw new Error(p?.detail||p?.error||`API ${res.status}`);p._edgeIqLoadedAt=Date.now();state.sessionRequests++;sessionStorage.setItem(REQUEST_KEY,String(state.sessionRequests));localStorage.setItem(CACHE_KEY,JSON.stringify({loadedAt:Date.now(),data:p}));render(p);setStatus('Loaded',new Date().toLocaleString(),`${p.events?.length||0} events`)}catch(e){setStatus('Error',e.message);alert(`Odds load failed:\n\n${e.message}`)}finally{b.disabled=false;b.textContent='LOAD LIVE ODDS'}}
+$('loadBtn').addEventListener('click',loadOdds);$('saveProxy').addEventListener('click',()=>{const v=$('proxyUrl').value.trim().replace(/\/$/,'');v?localStorage.setItem(PROXY_KEY,v):localStorage.removeItem(PROXY_KEY);alert(v?'Worker URL saved.':'Worker URL cleared.')});$('proxyUrl').value=localStorage.getItem(PROXY_KEY)||'';$('minOdds').addEventListener('input',()=>state.data&&render(state.data));$('bankroll').value=localStorage.getItem('edgeIqBankroll')||'5000';$('kellyFraction').value=localStorage.getItem('edgeIqKellyFraction')||'0.5';$('bankroll').addEventListener('input',()=>localStorage.setItem('edgeIqBankroll',$('bankroll').value));$('kellyFraction').addEventListener('change',()=>{localStorage.setItem('edgeIqKellyFraction',$('kellyFraction').value);document.querySelectorAll('.modelProb').forEach(x=>window.EdgeIQ?.renderRow(x))});cache();
 </script>
-</body>
-</html>
+</body></html>
