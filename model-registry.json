@@ -1,8 +1,9 @@
 {
-  "active": "AFL_ML_V2",
+  "active": "SPORT_SPECIFIC_PAPER_MODELS",
   "models": {
     "AFL_ELO_V1": {"status":"benchmark","type":"elo","requiresValidation":true},
-    "AFL_ML_V2": {"status":"paper","type":"transparent_ensemble","requiresValidation":true}
+    "AFL_ML_V3": {"status":"paper","type":"recency_weighted_ensemble","requiresValidation":true},
+    "BASKETBALL_V1": {"status":"paper","type":"recency_weighted_score_model","leagues":["NBA","NBL"],"markets":["moneyline","spread","total"],"requiresValidation":true}
   },
   "promotionGates": {
     "minimumOutOfSamplePredictions": 300,
@@ -10,7 +11,8 @@
     "requireCalibrationEvidence": true,
     "requirePositiveCLV": true,
     "requirePositiveROI": true,
-    "requireDrawdownReview": true
+    "requireDrawdownReview": true,
+    "requireMarketCoverageCheck": true
   },
   "realMoneyEnabled": false
 }
