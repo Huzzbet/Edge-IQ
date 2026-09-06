@@ -12,3 +12,22 @@
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ensureLeagueOptions);else ensureLeagueOptions();
  window.EdgeIQModel={evaluate,apply,externalProbability,baselineProbability,priceAnomaly,calibratedExternal};
 })();
+
+// v4.1 market-quality and model-readiness layer
+function marketQuality(o){
+  const books=Number(o.books||0), consensus=Number(o.consensusProb||0), model=Number(o.modelProb||0);
+  const coverage=Math.min(1,books/6);
+  const disagreement=model&&consensus?Math.min(1,Math.abs(model-consensus)/0.12):0;
+  const anomaly=Math.min(1,Math.abs(Number(o.priceAnomalyRatio||0))/0.08);
+  return Math.min(1,coverage*.45+disagreement*.25+anomaly*.30);
+}
+function opportunityScoreV41(o){
+  const ev=Number(o.modelEv), screen=Number(o.screeningEv), q=marketQuality(o);
+  if(Number.isFinite(ev)) return Math.max(0,ev)*.70+q*.30;
+  if(Number.isFinite(screen)) return Math.max(0,screen)*.40+q*.15;
+  return Math.max(0,Number(o.priceEdge||0))*.15;
+}
+function rankOpportunitiesV41(items){
+  return items.map(o=>({...o,marketQuality:marketQuality(o),opportunityScore:opportunityScoreV41(o)}))
+    .sort((a,b)=>(b.opportunityScore??-Infinity)-(a.opportunityScore??-Infinity));
+}
