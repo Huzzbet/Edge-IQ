@@ -24,3 +24,15 @@ export function runBacktest(games,opts={}){
  const stake=bets.length?bets.length:0,profit=bets.reduce((s,b)=>s+b.profit,0),wins=bets.filter(b=>b.y).length;
  return {model:'AFL_ELO_V1',predictions:rows,bets,metrics:{samples:rows.length,brier:brier(rows),logLoss:logLoss(rows),accuracy:rows.length?rows.filter(r=>(r.p>=.5?1:0)===r.y).length/rows.length:null,calibration:calibration(rows),betCount:bets.length,wins,hitRate:stake?wins/stake:null,profit,roi:stake?profit/stake:null},period:{from:rows[0]?.date??null,to:rows.at(-1)?.date??null}};
 }
+
+
+// Cross-sport market backtest extension. Uses supplied timestamped snapshots; no execution.
+export function runMarketBacktest(rows,opts={}){
+ const minEv=Number(opts.minEv??0.03), horizonMs=Number(opts.horizonMs??2*60*60*1000), minBooks=Number(opts.minBooks??3);
+ const groups=new Map(); for(const r of rows||[]){const k=`${r.eventId||''}::${r.selection||''}`;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r)}
+ const signals=[];
+ for(const x of groups.values()){x.sort((a,b)=>(a.ts||0)-(b.ts||0));for(let i=0;i<x.length;i++){const r=x[i],ev=Number(r.modelEv??r.screeningEv);if(!Number.isFinite(ev)||ev<minEv||Number(r.books||0)<minBooks||!(r.odds>1))continue;const end=x.find(z=>(z.ts-r.ts)>0&&(z.ts-r.ts)<=horizonMs&&z.odds>1);if(!end)continue;signals.push({eventId:r.eventId,selection:r.selection,sport:r.sport,market:r.market,entryOdds:r.odds,followOdds:end.odds,entryEV:ev,clv:r.odds/end.odds-1,horizonMs:end.ts-r.ts})}}
+ const avg=k=>signals.length?signals.reduce((s,r)=>s+(r[k]||0),0)/signals.length:null;
+ const groupBy=k=>{const m={};signals.forEach(r=>(m[r[k]||'UNKNOWN']??=[]).push(r));return Object.entries(m).map(([name,x])=>({name,n:x.length,avgCLV:x.reduce((s,r)=>s+r.clv,0)/x.length})).sort((a,b)=>b.avgCLV-a.avgCLV)};
+ return {signals:signals.length,avgCLV:avg('clv'),positiveCLVRate:signals.length?signals.filter(r=>r.clv>0).length/signals.length:null,bySport:groupBy('sport'),byMarket:groupBy('market'),signals};
+}
