@@ -7,7 +7,10 @@
     "MLB_V1": {"status":"paper","type":"recency_weighted_score_model","leagues":["MLB"],"markets":["moneyline","runline","total"],"requiresValidation":true},
     "NRL_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["NRL"],"markets":["moneyline","spread","total","team_total"],"requiresValidation":true},
     "TENNIS_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["TENNIS"],"markets":["moneyline","spread","total"],"requiresValidation":true},
-    "EPL_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["EPL"],"markets":["moneyline","spread","total","btts","draw_no_bet"],"requiresValidation":true}
+    "EPL_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["EPL"],"markets":["moneyline","spread","total","btts","draw_no_bet"],"requiresValidation":true},
+    "NRL_V1": {"status":"development","type":"feature_ensemble","leagues":["NRL"],"markets":["moneyline","spread","total","team_total"],"requiresValidation":true},
+    "TENNIS_V1": {"status":"development","type":"surface_adjusted_rating","leagues":["TENNIS"],"markets":["moneyline","spread","total"],"requiresValidation":true},
+    "EPL_V1": {"status":"development","type":"poisson_goal_model","leagues":["EPL"],"markets":["moneyline","spread","total","btts"],"requiresValidation":true}
   },
   "marketUniverse": {
     "core": ["AFL","NRL","NBA","NBL","MLB","TENNIS","EPL"],
@@ -21,7 +24,8 @@
     "requirePositiveCLV": true,
     "requirePositiveROI": true,
     "requireDrawdownReview": true,
-    "requireMarketCoverageCheck": true
+    "requireMarketCoverageCheck": true,
+    "requireMarketQualityScore": true
   },
   "realMoneyEnabled": false
 }
