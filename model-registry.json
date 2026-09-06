@@ -3,7 +3,16 @@
   "models": {
     "AFL_ELO_V1": {"status":"benchmark","type":"elo","requiresValidation":true},
     "AFL_ML_V3": {"status":"paper","type":"recency_weighted_ensemble","requiresValidation":true},
-    "BASKETBALL_V1": {"status":"paper","type":"recency_weighted_score_model","leagues":["NBA","NBL"],"markets":["moneyline","spread","total"],"requiresValidation":true}
+    "BASKETBALL_V2": {"status":"paper","type":"recency_weighted_score_model","leagues":["NBA","NBL"],"markets":["moneyline","spread","total","team_total"],"requiresValidation":true},
+    "MLB_V1": {"status":"paper","type":"recency_weighted_score_model","leagues":["MLB"],"markets":["moneyline","runline","total"],"requiresValidation":true},
+    "NRL_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["NRL"],"markets":["moneyline","spread","total","team_total"],"requiresValidation":true},
+    "TENNIS_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["TENNIS"],"markets":["moneyline","spread","total"],"requiresValidation":true},
+    "EPL_BASELINE": {"status":"screening","type":"consensus_shrunk_baseline","leagues":["EPL"],"markets":["moneyline","spread","total","btts","draw_no_bet"],"requiresValidation":true}
+  },
+  "marketUniverse": {
+    "core": ["AFL","NRL","NBA","NBL","MLB","TENNIS","EPL"],
+    "next": ["CRICKET","NHL","NFL"],
+    "experimental": ["GOLF","UFC","F1"]
   },
   "promotionGates": {
     "minimumOutOfSamplePredictions": 300,
