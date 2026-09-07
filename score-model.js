@@ -42,6 +42,6 @@ function predictOne(model,home,away){
  }else{homeProbability=clamp(1-normalCdf(0,margin,sdMargin));awayProbability=clamp(normalCdf(0,margin,sdMargin))}
  return {homeScore,awayScore,total,margin,sdMargin,sdTotal,homeProbability,awayProbability,drawProbability};
 }
-function eventPredictions(model,events){return (events||[]).map(e=>{const p=predictOne(model,e.home_team||e.home,e.away_team||e.away);return {event_id:e.event_id,source:model.params.draws?'EPL_SCORE_V1':'NRL_SCORE_V1',gamesUsed:model.gamesUsed,homeProbability:p.homeProbability,awayProbability:p.awayProbability,drawProbability:p.drawProbability,expectedHomeScore:p.homeScore,expectedAwayScore:p.awayScore,expectedMargin:p.margin,expectedTotal:p.total,marginSd:p.sdMargin,totalSd:p.sdTotal,features:['recency_weighted_team_strength','home_advantage','recent_scoring']}})}
+function eventPredictions(model,events){return (events||[]).map(e=>{const p=predictOne(model,e.home_team||e.home,e.away_team||e.away);return {event_id:e.event_id,source:model.params.draws?'EPL_V1':'NRL_V1',gamesUsed:model.gamesUsed,homeProbability:p.homeProbability,awayProbability:p.awayProbability,drawProbability:p.drawProbability,expectedHomeScore:p.homeScore,expectedAwayScore:p.awayScore,expectedMargin:p.margin,expectedTotal:p.total,marginSd:p.sdMargin,totalSd:p.sdTotal,features:['recency_weighted_team_strength','home_advantage','recent_scoring']}})}
 function predict(model,events){return eventPredictions(model,events)}
 export {build,predict,predictOne,eventPredictions,key};
