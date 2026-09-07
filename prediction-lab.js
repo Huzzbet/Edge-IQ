@@ -4,7 +4,7 @@
  const read=()=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return[]}};
  const write=x=>localStorage.setItem(key,JSON.stringify(x.slice(-5000)));
  function capture(o,meta={}){
-  const row={id:crypto.randomUUID(),createdAt:new Date().toISOString(),eventId:o.eventId||o.id||null,sport:o.sport||o.league||null,market:o.market_key||o.market||null,selection:o.selection||o.name||null,modelProb:Number(o.modelProb)||null,entryOdds:Number(o.odds)||null,consensusProb:Number(o.consensusProb)||null,opportunityScore:Number(o.opportunityScore)||null,books:Number(o.books)||0,meta};
+  const row={id:crypto.randomUUID(),createdAt:new Date().toISOString(),eventId:o.eventId||o.id||null,sport:o.sport||o.league||null,market:o.market_key||o.market||null,selection:o.selection||o.name||null,modelProb:Number(o.modelProb)||null,entryOdds:Number(o.odds)||null,consensusProb:Number(o.consensusProb)||null,opportunityScore:Number(o.opportunityScore)||null,books:Number(o.books)||0,{...meta,modelSource:o.modelSource||o.model_source||meta.modelSource||null};
   const rows=read();rows.push(row);write(rows);return row;
  }
  function close(id,closingOdds,result=null){
