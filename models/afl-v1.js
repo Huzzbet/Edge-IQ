@@ -57,8 +57,13 @@
       source:'AFL_LADDER_2026_V1',version:'AFL-V1.0',
       asOf:'2026-09-07',independent:true};
   }
+  function isAflEvent(o){
+    const tag=String(o.sport||o.league||'').toLowerCase();
+    if(/afl|aussie rules|australian football/.test(tag))return true;
+    return !!(team(o.home||o.home_team)&&team(o.away||o.away_team));
+  }
   function probability(o){
-    if(String(o.sport||o.league||'').toUpperCase()!=='AFL')return null;
+    if(!isAflEvent(o))return null;
     const m=modelFor(o); if(!m)return null;
     const market=String(o.market||'').toLowerCase();
     const side=String(o.side||'').toLowerCase();
@@ -85,5 +90,5 @@
       modelVersion:m.version,modelSource:m.source,modelIndependent:true,
       modelConfidence:Math.round(clamp(.58+(Math.min(1,Math.abs(m.margin)/35)*.12),.55,.72)*100)};
   }
-  window.EdgeIQAFLModel={predict,probability,modelFor,team,version:'AFL-V1.0',asOf:'2026-09-07'};
+  window.EdgeIQAFLModel={predict,probability,modelFor,team,isAflEvent,version:'AFL-V1.0',asOf:'2026-09-07'};
 })();
