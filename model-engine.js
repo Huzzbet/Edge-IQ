@@ -30,8 +30,24 @@
  }
  function internalModelProbability(o){
    try{
-     const p=window.EdgeIQAFLModel?.predict?.(o);
-     if(p&&Number.isFinite(p.prob)&&p.prob>0&&p.prob<1)return p;
+     const afl=window.EdgeIQAFLModel?.predict?.(o);
+     if(afl&&Number.isFinite(afl.prob)&&afl.prob>0&&afl.prob<1)return afl;
+   }catch(_){}
+   try{
+     const sport=String(o.sport||o.league||'').toUpperCase();
+     const market=String(o.market||'').toLowerCase();
+     if(sport==='NRL' && /h2h|winner|moneyline|spread|handicap|line/.test(market)){
+       const p=window.EdgeIQResearchModels?.nrlProbability?.(o);
+       if(Number.isFinite(p)&&p>0&&p<1)return {prob:p,fair:1/p,modelVersion:'NRL-RESEARCH-V1',modelSource:'NRL_RESEARCH',modelIndependent:true,modelConfidence:55};
+     }
+     if(sport==='TENNIS' && /h2h|winner|moneyline|match/.test(market)){
+       const p=window.EdgeIQResearchModels?.tennisProbability?.(o);
+       if(Number.isFinite(p)&&p>0&&p<1)return {prob:p,fair:1/p,modelVersion:'TENNIS-RESEARCH-V1',modelSource:'TENNIS_RESEARCH',modelIndependent:true,modelConfidence:55};
+     }
+     if(sport==='EPL' && /h2h|winner|moneyline|1x2/.test(market)){
+       const p=window.EdgeIQResearchModels?.eplProbability?.(o);
+       if(Number.isFinite(p)&&p>0&&p<1)return {prob:p,fair:1/p,modelVersion:'EPL-RESEARCH-V1',modelSource:'EPL_RESEARCH',modelIndependent:true,modelConfidence:55};
+     }
    }catch(_){}
    return null;
  }
