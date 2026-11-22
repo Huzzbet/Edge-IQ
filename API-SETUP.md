@@ -96,3 +96,21 @@ Never put the Odds API key in:
 - screenshots or public posts
 
 If a key is ever accidentally committed or exposed, revoke/rotate it with the API provider immediately.
+
+## On-demand ChatGPT market analysis
+
+The Scanner page now includes **ANALYSE CURRENT SCAN WITH CHATGPT**. It only calls the AI endpoint when you press the button; there is no background agent, polling, or scheduled AI run.
+
+The Cloudflare Worker sends the latest market snapshot to the OpenAI Responses API. The OpenAI key is stored server-side as a Worker Secret and is never exposed to the browser.
+
+Add a second Worker secret:
+
+- Variable name: `OPENAI_API_KEY`
+- Value: your OpenAI API key
+- Optional Worker variable: `OPENAI_MODEL` (defaults to `gpt-6.2-astra`)
+
+In Cloudflare: **Workers & Pages → edge-iq-odds → Settings → Variables and Secrets → Add → Secret**. Save and deploy after adding the secret.
+
+OpenAI API usage is billed separately from a ChatGPT subscription. Each AI analysis is a separate API request and incurs usage charges according to the selected model. The live odds scan and ordinary EV calculations continue to work without this secret; the AI analysis button will report that setup is required until it is configured.
+
+The AI report is a research aid. It distinguishes independent model signals from bookmaker-consensus screening and does not place bets.
