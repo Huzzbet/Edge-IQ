@@ -97,20 +97,12 @@ Never put the Odds API key in:
 
 If a key is ever accidentally committed or exposed, revoke/rotate it with the API provider immediately.
 
-## On-demand ChatGPT market analysis
+## Local market intelligence
 
-The Scanner page now includes **ANALYSE CURRENT SCAN WITH CHATGPT**. It only calls the AI endpoint when you press the button; there is no background agent, polling, or scheduled AI run.
+The Scanner includes a rules-based intelligence layer in `edge-iq-intelligence.js`. It runs in the browser on the latest scan and uses current model outputs, bookmaker coverage, price anomalies, model-versus-consensus differences, and prior snapshots saved in the browser.
 
-The Cloudflare Worker sends the latest market snapshot to the OpenAI Responses API. The OpenAI key is stored server-side as a Worker Secret and is never exposed to the browser.
-
-Add a second Worker secret:
-
-- Variable name: `OPENAI_API_KEY`
-- Value: your OpenAI API key
-- Optional Worker variable (plain text): `OPENAI_MODEL` (defaults to `gpt-6.2-astra`)
-
-In Cloudflare: **Workers & Pages → edge-iq-odds → Settings → Variables and Secrets → Add → Secret**. Save and deploy after adding the secret.
-
-OpenAI API usage is billed separately from a ChatGPT subscription. Each AI analysis is a separate API request and incurs usage charges according to the selected model. The live odds scan and ordinary EV calculations continue to work without this secret; the AI analysis button will report that setup is required until it is configured.
-
-The AI report is a research aid. It distinguishes independent model signals from bookmaker-consensus screening and does not place bets. Because the endpoint uses your OpenAI API account, consider adding a Cloudflare rate-limiting rule for `/ai/analyse` before sharing the public app widely.
+- No OpenAI API key or AI subscription is required.
+- No additional network request is made when local analysis runs.
+- Live odds still use the existing Odds API key and Cloudflare Worker.
+- Price movement is shown only when earlier comparable scans exist in that browser.
+- This is research support, not a validated prediction guarantee or staking instruction.
