@@ -55,15 +55,16 @@ async function analyseMarkets(request,env,headers){
   const raw=await request.text();
   if(raw.length>60000)throw new Error('Analysis payload is too large. Run a smaller market scan.');
   const body=JSON.parse(raw);
+  const numOrNull=v=>v==null||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
   const opps=(Array.isArray(body.opportunities)?body.opportunities:[]).slice(0,35).map(o=>({
    sport:o.sport||o.league||'Unknown',event:o.event||'Unknown event',start:o.start||null,
    market:o.market||'Unknown market',period:o.period||'',line:o.line??null,
    selection:o.selection||'Unknown selection',bestBook:o.book||'Unknown',bestOdds:Number(o.odds)||null,
-   books:Number(o.books)||0,consensusProbability:Number.isFinite(Number(o.consensusProb))?Number(o.consensusProb):null,
-   modelProbability:Number.isFinite(Number(o.modelProb))?Number(o.modelProb):null,
-   modelFairOdds:Number.isFinite(Number(o.modelFair))?Number(o.modelFair):null,
-   modelEV:Number.isFinite(Number(o.modelEv))?Number(o.modelEv):null,
-   screeningEV:Number.isFinite(Number(o.screeningEv))?Number(o.screeningEv):null,
+   books:Number(o.books)||0,consensusProbability:numOrNull(o.consensusProb),
+   modelProbability:numOrNull(o.modelProb),
+   modelFairOdds:numOrNull(o.modelFair),
+   modelEV:numOrNull(o.modelEv),
+   screeningEV:numOrNull(o.screeningEv),
    modelSource:o.modelSource||'BASELINE',modelIndependent:o.modelIndependent===true,
    modelVersion:o.modelVersion||null,modelConfidence:o.modelConfidence??null,
    confidence:o.confidence??null,modelExpected:o.modelExpected||null,
