@@ -14,7 +14,7 @@ Cloudflare keeps Worker secrets encrypted and makes them available to the Worker
 
 1. Open the Cloudflare dashboard.
 2. Go to **Workers & Pages**.
-3. Open the Worker serving **edge-iq.seanhurren.workers.dev** (Worker name may display as `edge-iq`).
+3. Open the Worker configured for Edge-IQ. The repository's `wrangler.toml` names it `edge-iq-odds`; confirm its deployed URL matches the app's Worker URL.
 4. Open **Settings**.
 5. Find **Variables and Secrets**.
 6. Select **Add**.
@@ -109,7 +109,7 @@ Add a second Worker secret:
 - Value: your OpenAI API key
 - Optional Worker variable (plain text): `OPENAI_MODEL` (defaults to `gpt-6.2-astra`)
 
-In Cloudflare: **Workers & Pages → edge-iq → Settings → Variables and Secrets → Add → Secret**. Save and deploy after adding the secret.
+In Cloudflare: **Workers & Pages → edge-iq-odds → Settings → Variables and Secrets → Add → Secret**. Save and deploy after adding the secret.
 
 OpenAI API usage is billed separately from a ChatGPT subscription. Each AI analysis is a separate API request and incurs usage charges according to the selected model. The live odds scan and ordinary EV calculations continue to work without this secret; the AI analysis button will report that setup is required until it is configured.
 
